@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #display {
+            font-size: 2em;
+            text-align: right;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .btn {
+            font-size: 1.2em;
+            padding: 15px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div id="display">0</div>
+        <div class="row">
+            <button id="btn-7" class="btn btn-secondary col-3">7</button>
+            <button id="btn-8" class="btn btn-secondary col-3">8</button>
+            <button id="btn-9" class="btn btn-secondary col-3">9</button>
+            <button id="btn-divide" class="btn btn-primary col-3">/</button>
+        </div>
+        <div class="row">
+            <button id="btn-4" class="btn btn-secondary col-3">4</button>
+            <button id="btn-5" class="btn btn-secondary col-3">5</button>
+            <button id="btn-6" class="btn btn-secondary col-3">6</button>
+            <button id="btn-multiply" class="btn btn-primary col-3">*</button>
+        </div>
+        <div class="row">
+            <button id="btn-1" class="btn btn-secondary col-3">1</button>
+            <button id="btn-2" class="btn btn-secondary col-3">2</button>
+            <button id="btn-3" class="btn btn-secondary col-3">3</button>
+            <button id="btn-subtract" class="btn btn-primary col-3">-</button>
+        </div>
+        <div class="row">
+            <button id="btn-0" class="btn btn-secondary col-3">0</button>
+            <button id="btn-clear" class="btn btn-danger col-3">C</button>
+            <button id="btn-equals" class="btn btn-success col-3">=</button>
+            <button id="btn-add" class="btn btn-primary col-3">+</button>
+        </div>
+    </div>
+    <script>
+        const display = document.getElementById('display');
+        let currentInput = '';
+        let operator = '';
+        let firstOperand = null;
+
+        function updateDisplay(value) {
+            display.textContent = value;
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            operator = '';
+            firstOperand = null;
+            updateDisplay('0');
+        }
+
+        function handleNumberClick(number) {
+            if (currentInput === '0') {
+                currentInput = number;
+            } else {
+                currentInput += number;
+            }
+            updateDisplay(currentInput);
+        }
+
+        function handleOperatorClick(op) {
+            if (firstOperand === null) {
+                firstOperand = parseFloat(currentInput);
+            } else if (operator) {
+                firstOperand = calculate(firstOperand, parseFloat(currentInput), operator);
+            }
+            operator = op;
+            currentInput = '';
+        }
+
+        function handleEqualsClick() {
+            if (firstOperand !== null && operator) {
+                const result = calculate(firstOperand, parseFloat(currentInput), operator);
+                updateDisplay(result);
+                currentInput = result.toString();
+                firstOperand = null;
+                operator = '';
+            }
+        }
+
+        function calculate(a, b, op) {
+            switch (op) {
+                case '+': return a + b;
+                case '-': return a - b;
+                case '*': return a * b;
+                case '/': return b !== 0 ? a / b : 'Error';
+                default: return b;
+            }
+        }
+
+        document.getElementById('btn-0').addEventListener('click', () => handleNumberClick('0'));
+        document.getElementById('btn-1').addEventListener('click', () => handleNumberClick('1'));
+        document.getElementById('btn-2').addEventListener('click', () => handleNumberClick('2'));
+        document.getElementById('btn-3').addEventListener('click', () => handleNumberClick('3'));
+        document.getElementById('btn-4').addEventListener('click', () => handleNumberClick('4'));
+        document.getElementById('btn-5').addEventListener('click', () => handleNumberClick('5'));
+        document.getElementById('btn-6').addEventListener('click', () => handleNumberClick('6'));
+        document.getElementById('btn-7').addEventListener('click', () => handleNumberClick('7'));
+        document.getElementById('btn-8').addEventListener('click', () => handleNumberClick('8'));
+        document.getElementById('btn-9').addEventListener('click', () => handleNumberClick('9'));
+        document.getElementById('btn-add').addEventListener('click', () => handleOperatorClick('+'));
+        document.getElementById('btn-subtract').addEventListener('click', () => handleOperatorClick('-'));
+        document.getElementById('btn-multiply').addEventListener('click', () => handleOperatorClick('*'));
+        document.getElementById('btn-divide').addEventListener('click', () => handleOperatorClick('/'));
+        document.getElementById('btn-equals').addEventListener('click', handleEqualsClick);
+        document.getElementById('btn-clear').addEventListener('click', clearDisplay);
+    </script>
+</body>
+</html>
